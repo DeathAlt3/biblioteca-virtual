@@ -2,4 +2,14 @@ spring:
   application:
     name: backend
   profiles:
-    active: psql
+    # Perfil padrão: H2 em memória (não precisa instalar banco).
+    # Para usar PostgreSQL: --spring.profiles.active=psql
+    active: h2
+  jpa:
+    open-in-view: true
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha

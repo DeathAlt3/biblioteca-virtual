@@ -3,6 +3,7 @@ package br.edu.christus.backend.controller;
 import br.edu.christus.backend.domain.dto.RegistroLeituraProgressoDTO;
 import br.edu.christus.backend.domain.dto.RegistroLeituraRequestDTO;
 import br.edu.christus.backend.domain.dto.RegistroLeituraResponseDTO;
+import br.edu.christus.backend.domain.dto.RegistroLeituraUpdateDTO;
 import br.edu.christus.backend.service.RegistroLeituraService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -48,6 +49,20 @@ public class RegistroLeituraController {
             @PathVariable Long id, 
             @RequestBody @Valid RegistroLeituraProgressoDTO dto) {
         return service.atualizarProgresso(id, dto);
+    }
+
+    @Operation(summary = "Edita um registro de leitura (status EM_ANDAMENTO/PAUSADO e dispositivo)")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Registro atualizado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Status ou dispositivo inválidos"),
+            @ApiResponse(responseCode = "404", description = "Registro de leitura não encontrado"),
+            @ApiResponse(responseCode = "409", description = "Leitura já concluída")
+    })
+    @PutMapping("/{id}")
+    public RegistroLeituraResponseDTO update(
+            @PathVariable("id") Long id,
+            @RequestBody @Valid RegistroLeituraUpdateDTO dto) {
+        return service.update(id, dto);
     }
 
     @Operation(summary = "Lista todos os registros de leitura (com filtros por estudante ou livro)")

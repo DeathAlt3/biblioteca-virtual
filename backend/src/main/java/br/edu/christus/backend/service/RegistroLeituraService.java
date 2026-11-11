@@ -4,6 +4,7 @@ import br.edu.christus.backend.domain.dto.LivroResponseDTO;
 import br.edu.christus.backend.domain.dto.RegistroLeituraProgressoDTO;
 import br.edu.christus.backend.domain.dto.RegistroLeituraRequestDTO;
 import br.edu.christus.backend.domain.dto.RegistroLeituraResponseDTO;
+import br.edu.christus.backend.domain.dto.RegistroLeituraUpdateDTO;
 import br.edu.christus.backend.domain.dto.UserLowDTO;
 import br.edu.christus.backend.domain.model.Livro;
 import br.edu.christus.backend.domain.model.RegistroLeitura;
@@ -93,6 +94,25 @@ public class RegistroLeituraService {
 
         RegistroLeitura atualizado = registroRepository.save(registro);
         return toResponseDTO(atualizado);
+    }
+
+    public RegistroLeituraResponseDTO update(Long id, RegistroLeituraUpdateDTO dto) {
+        RegistroLeitura registro = registroRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Registro de leitura não encontrado com o ID: " + id));
+
+        if ("CONCLUIDO".equals(registro.getStatus())) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "Esta leitura já foi concluída e não pode ser pausada ou reaberta.");
+        }
+
+        registro.setStatus(dto.getStatus());
+        if (dto.getDispositivo() != null && !dto.getDispositivo().isBlank()) {
+            registro.setDispositivo(dto.getDispositivo().toUpperCase());
+        }
+        registro.setDataUltimoAcesso(LocalDate.now());
+
+        return toResponseDTO(registroRepository.save(registro));
     }
 
     public List<RegistroLeituraResponseDTO> findAll(Long usuarioId, Long livroId) {

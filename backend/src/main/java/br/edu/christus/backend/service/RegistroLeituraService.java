@@ -148,7 +148,7 @@ public class RegistroLeituraService {
             dto.setUsuario(MapperUtil.parseObject(reg.getUsuario(), UserLowDTO.class));
         }
         if (reg.getLivro() != null) {
-            dto.setLivro(MapperUtil.parseObject(reg.getLivro(), LivroResponseDTO.class));
+            dto.setLivro(LivroResponseDTO.fromEntity(reg.getLivro()));
         }
         return dto;
     }

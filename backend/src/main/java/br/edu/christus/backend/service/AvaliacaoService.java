@@ -109,7 +109,7 @@ public class AvaliacaoService {
             dto.setUsuario(MapperUtil.parseObject(avaliacao.getUsuario(), UserLowDTO.class));
         }
         if (avaliacao.getLivro() != null) {
-            dto.setLivro(MapperUtil.parseObject(avaliacao.getLivro(), LivroResponseDTO.class));
+            dto.setLivro(LivroResponseDTO.fromEntity(avaliacao.getLivro()));
         }
         return dto;
     }
